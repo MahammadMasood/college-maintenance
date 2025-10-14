@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}New Request{% endblock %}
+{% block content %}
+<div class="col-md-8 mx-auto">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="mb-3">New Maintenance Request</h4>
+      <form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">Submit Request</button></form>
+    </div>
+  </div>
+</div>
+{% endblock %}

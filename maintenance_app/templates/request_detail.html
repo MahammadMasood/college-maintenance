@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Request Detail{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header"><strong>{{ req.title }}</strong> - <small>{{ req.branch }}</small></div>
+  <div class="card-body">
+    <p><strong>Lab:</strong> {{ req.lab_name }}</p>
+    <p><strong>Description:</strong><br>{{ req.description }}</p>
+    <p><strong>Status:</strong> {{ req.status }}</p>
+    <p><strong>Admin Remark:</strong> {{ req.admin_remark }}</p>
+    <p><small>Submitted: {{ req.date_submitted|date:'d M Y H:i' }}</small></p>
+  </div>
+</div>
+{% endblock %}

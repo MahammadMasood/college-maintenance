@@ -1,0 +1,54 @@
+body {
+  background: linear-gradient( #9facc3);
+  font-family: 'Poppins', sans-serif;
+  height: 100vh;
+  margin: 0;
+  color: #fff;
+
+}
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 85vh;
+}
+
+.login-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 50px;
+  border-radius: 15px;
+  width: 420px;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.form-control {
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  padding: 10px;
+}
+
+.btn-primary {
+  background-color: #ff4b2b;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #ff6a3d;
+  transform: scale(1.05);
+}
+
+h3 {
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+label {
+  font-weight: 500;
+}
