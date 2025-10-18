@@ -1,54 +1,167 @@
-body {
-  background: linear-gradient( #9facc3);
-  font-family: 'Poppins', sans-serif;
-  height: 100vh;
+* {
   margin: 0;
-  color: #fff;
-
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-.login-wrapper {
+body {
+  background-color: #f8f9fa;
+  color: #faf8f8;
+}
+
+/* Navbar */
+.navbar {
   display: flex;
+  align-items: center;
+  background: #003366;
+  padding: 15px 50px;
+  color: white;
+  gap: 100px; /* This gives space between logo and other items */
+}
+
+
+.navbar .logo {
+  font-size: 20px;
+  font-weight: bold;
+    margin-right: 400px;
+}
+
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #ffcc00;
+}
+
+.login-btn {
+  background: #ffcc00;
+  color: #003366;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  background: #ffd633;
+}
+
+/* Hero Section */
+.hero {
+  height: 80vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1') center/cover no-repeat;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.main-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+}
+.main-btn:hover {
+  background-color: #ffd633;
+}
+
+/* About Section */
+.about {
+  text-align: center;
+  padding: 50px 20px;
+  background: white;
+}
+
+.about h2 {
+  color: #003366;
+  margin-bottom: 15px;
+}
+.about p{
+  color: black;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
   justify-content: center;
   align-items: center;
-  height: 85vh;
 }
 
-.login-card {
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 50px;
-  border-radius: 15px;
-  width: 420px;
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
 }
 
-.form-control {
-  border-radius: 6px;
-  border: none;
-  outline: none;
+.modal-content input {
+  display: block;
+  width: 90%;
+  margin: 10px auto;
   padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.btn-primary {
-  background-color: #ff4b2b;
+.modal-content button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background: #003366;
+  color: white;
   border: none;
-  padding: 10px;
-  border-radius: 6px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-content .close {
+  background: #888;
+}
+
+#loginMsg {
+  margin-top: 10px;
   font-weight: bold;
-  transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
-  background-color: #ff6a3d;
-  transform: scale(1.05);
-}
-
-h3 {
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
-label {
-  font-weight: 500;
+/* Footer */
+footer {
+  text-align: center;
+  background: #003366;
+  color: white;
+  padding: 15px 0;
+  font-size: 0.9rem;
 }

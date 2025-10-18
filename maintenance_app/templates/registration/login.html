@@ -1,25 +1,63 @@
-{% extends 'base.html' %}
-{% block title %}Login - Maintenance Portal{% endblock %}
-{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>{% block title %}Login - Maintenance Portal{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'css/login.css' %}?v={{ STATIC_VERSION }}">
+</head>
+  {% block content %}
+<body>
+<header>
+  <nav class="navbar " >
+    <div class="kvglogo"><img src="{%static 'images/kvgp-Logo.png' %}" alt="" height="80px" ></div>
+    <div class="logo">KVG Polytechnic</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a onclick="openLogin()">Track Status</a></li>
+      <li><a href="https://kvgpolytechnic.org.in/">About</a></li>
+      <li><button class="login-btn" onclick="openLogin()">Login</button></li>
+    </ul>
+  </nav>
+</header>
 
-<div class="login-wrapper">
-   <div class="login-card shadow"> 
-    <h3 class="text-center mb-4">Login</h3>
-<form method="post" action="{% url 'login' %}?next=/">
-  {% csrf_token %}
-
-  <div class="form-group mb-3">
-    <label for="id_username">Username:</label>
-    <input type="text" id="id_username" name="username" class="form-control" required placeholder="Enter your username">
+<!-- Hero Section -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <h1>Welcome to the College Maintenance Portal</h1>
+   <b> <p>Report, track, and resolve maintenance issues quickly and efficiently.</p></b>
+    <button class="main-btn" onclick="openLogin()" >Report an Issue</button>
   </div>
+</section>
 
-  <div class="form-group mb-4">
-    <label for="id_password">Password:</label>
-    <input type="password" id="id_password" name="password" class="form-control" required placeholder="Enter your password">
+<!-- About Section -->
+<section class="about">
+  <h2>About the Portal</h2>
+  <p>
+    This portal helps students and staff easily report campus maintenance issues.
+    Our goal is to keep your college safe, clean, and functional.
+  </p>
+</section>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal" >
+  <div class="modal-content">
+    <h2>Login</h2>
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      <input type="text" id="username" name="username" placeholder="Username" required>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+      <button type="button" class="close" onclick="closeLogin()">Close</button>
+    </form>
+    <p id="loginMsg"></p>
   </div>
+</div>
 
-  <button type="submit" class="btn btn-primary w-100">Login</button>
-</form>
-</div> 
-</div> 
+<!-- Footer -->
+<footer>
+  <p>© 2023-26 CS BATCH | All Rights Reserved</p>
+</footer>
+
+<script src="{% static 'js/script.js' %}"></script>
+</body>
 {% endblock %}

@@ -41,26 +41,34 @@ def hod_dashboard(request):
 @login_required
 def new_request(request):
     if request.method == 'POST':
-        form = MaintenanceRequestForm(request.POST)
-        if form.is_valid():
-            mr = form.save(commit=False)
-            mr.hod = request.user
-            try:
-                if not mr.branch:
-                    mr.branch = request.user.profile.branch
-            except Exception:
-                pass
-            mr.save()
-            messages.success(request, 'Request submitted successfully.')
-            return redirect('hod_dashboard')
-    else:
-        initial = {}
+        branch = request.POST.get('branch')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        selected_items = request.POST.getlist('items')
+        total_amount = request.POST.get('total_amount')
+
+        mr = MaintenanceRequest(
+            title=title,
+            description=description,
+            branch=branch,
+            hod=request.user,
+            selected_items=', '.join(selected_items),
+            total_amount=total_amount or 0
+        )
+
+        # Assign branch from profile if missing
         try:
-            initial['branch'] = request.user.profile.branch
+            if not mr.branch:
+                mr.branch = request.user.profile.branch
         except Exception:
             pass
-        form = MaintenanceRequestForm(initial=initial)
-    return render(request, 'new_request.html', {'form': form})
+
+        mr.save()
+        messages.success(request, 'Request submitted successfully.')
+        return redirect('hod_dashboard')
+
+    return render(request, 'new_request.html')
+
 @login_required
 def request_detail(request, pk):
     req = get_object_or_404(MaintenanceRequest, pk=pk)

@@ -1,12 +1,78 @@
 {% extends 'base.html' %}
+{%load static%}
 {% block title %}New Request{% endblock %}
 {% block content %}
-<div class="col-md-8 mx-auto">
-  <div class="card shadow-sm">
+<div class="col-md-8 mx-auto mt-4">
+  <div class="card shadow-sm border-0">
     <div class="card-body">
-      <h4 class="mb-3">New Maintenance Request</h4>
-      <form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">Submit Request</button></form>
+      <h4 class="mb-4 text-center">New Maintenance Request</h4>
+      <form method="post" id="maintenanceForm">
+        {% csrf_token %}
+        
+        <!-- Branch -->
+        <div class="mb-3">
+          <label for="branch" class="form-label">Branch</label>
+          <select name="branch" id="branch" class="form-select" required>
+            <option value="" disabled selected>Select Branch</option>
+            <option value="CSE">CSE</option>
+            <option value="CE">CE</option>
+            <option value="EEE">EEE</option>
+            <option value="ECE">ECE</option>
+            <option value="ATE">ATE</option>
+            <option value="ME">ME</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+
+        <!-- Title -->
+        <div class="mb-3">
+          <label for="title" class="form-label">Request Title</label>
+          <input type="text" name="title" id="title" class="form-control" placeholder="Enter request title" required>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea name="description" id="description" class="form-control" rows="3" placeholder="Describe the issue" required></textarea>
+        </div>
+
+        <!-- Items -->
+        <div class="mb-3">
+          <label class="form-label">Select Items</label>
+          <div class="form-check">
+            <input class="form-check-input item" type="checkbox" value="System Unit" data-price="15000" id="system_unit">
+            <label class="form-check-label" for="system_unit">
+              System Unit - ₹15,000
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input item" type="checkbox" value="Monitor" data-price="8000" id="monitor">
+            <label class="form-check-label" for="monitor">
+              Monitor - ₹8,000
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input item" type="checkbox" value="SMPS" data-price="2000" id="smps">
+            <label class="form-check-label" for="smps">
+              SMPS - ₹2,000
+            </label>
+          </div>
+        </div>
+
+        <!-- Total Amount -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Total Amount:</label>
+          <input type="hidden" name="total_amount" id="totalAmountInput">
+          <p id="totalAmount" class="fs-5 text-success">₹0</p>
+        </div>
+
+        <!-- Submit -->
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary px-4">Submit Request</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
