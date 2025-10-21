@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
 <title>{% block title %}Login - Maintenance Portal{% endblock %}</title>
+<link rel="icon" href="{% static "images/logo2.png" %}">
 <link rel="stylesheet" href="{% static 'css/login.css' %}?v={{ STATIC_VERSION }}">
 </head>
   {% block content %}
@@ -23,6 +24,10 @@
 <!-- Hero Section -->
 <section class="hero" id="home">
   <div class="hero-content">
+     <video autoplay muted playsinline width="300">
+    <source src="{% static '' %}" type="video/mp4">
+    Your browser does not support the video tag.
+    </video>
     <h1>Welcome to the College Maintenance Portal</h1>
    <b> <p>Report, track, and resolve maintenance issues quickly and efficiently.</p></b>
     <button class="main-btn" onclick="openLogin()" >Report an Issue</button>

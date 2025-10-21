@@ -1,78 +1,98 @@
 {% extends 'base.html' %}
-{%load static%}
+{% load static %}
 {% block title %}New Request{% endblock %}
 {% block content %}
-<div class="col-md-8 mx-auto mt-4">
-  <div class="card shadow-sm border-0">
+
+<div class="col-md-10 mx-auto">
+  <div class="card shadow-sm">
     <div class="card-body">
-      <h4 class="mb-4 text-center">New Maintenance Request</h4>
-      <form method="post" id="maintenanceForm">
+      <h4 class="mb-3">New Maintenance Request</h4>
+
+      <form method="post">
         {% csrf_token %}
-        
-        <!-- Branch -->
+
         <div class="mb-3">
-          <label for="branch" class="form-label">Branch</label>
-          <select name="branch" id="branch" class="form-select" required>
-            <option value="" disabled selected>Select Branch</option>
-            <option value="CSE">CSE</option>
-            <option value="CE">CE</option>
-            <option value="EEE">EEE</option>
-            <option value="ECE">ECE</option>
-            <option value="ATE">ATE</option>
-            <option value="ME">ME</option>
-            <option value="General">General</option>
+          <label class="form-label fw-bold">Branch</label>
+          <select name="branch" class="form-select" required>
+            <option value="">Select Branch</option>
+            <option>CSE</option>
+            <option>CE</option>
+            <option>EEE</option>
+            <option>ECE</option>
+            <option>ATE</option>
+            <option>ME</option>
+            <option>General</option>
           </select>
         </div>
 
-        <!-- Title -->
         <div class="mb-3">
-          <label for="title" class="form-label">Request Title</label>
-          <input type="text" name="title" id="title" class="form-control" placeholder="Enter request title" required>
+          <label class="form-label fw-bold">Title</label>
+          <input type="text" name="title" class="form-control" required>
         </div>
 
-        <!-- Description -->
         <div class="mb-3">
-          <label for="description" class="form-label">Description</label>
-          <textarea name="description" id="description" class="form-control" rows="3" placeholder="Describe the issue" required></textarea>
+          <label class="form-label fw-bold">Description</label>
+          <textarea name="description" rows="3" class="form-control" required></textarea>
         </div>
 
-        <!-- Items -->
-        <div class="mb-3">
-          <label class="form-label">Select Items</label>
-          <div class="form-check">
-            <input class="form-check-input item" type="checkbox" value="System Unit" data-price="15000" id="system_unit">
-            <label class="form-check-label" for="system_unit">
-              System Unit - ₹15,000
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input item" type="checkbox" value="Monitor" data-price="8000" id="monitor">
-            <label class="form-check-label" for="monitor">
-              Monitor - ₹8,000
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input item" type="checkbox" value="SMPS" data-price="2000" id="smps">
-            <label class="form-check-label" for="smps">
-              SMPS - ₹2,000
-            </label>
-          </div>
+        <hr>
+        <h5>Equipment List</h5>
+
+        <div class="table-responsive">
+          <table class="table table-bordered text-center align-middle" id="equipmentTable">
+            <thead class="table-light">
+              <tr>
+                <th>Select</th>
+                <th>Device</th>
+                <th>Brand/Model</th>
+                <th>Size</th>
+                <th>Price (₹)</th>
+                <th>Usage</th>
+                <th>Remarks</th>
+                <th>Quantity</th>
+                <th>Subtotal (₹)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items %}
+              <tr>
+                <td><input type="checkbox" class="item-checkbox" data-price="{{ item.price }}"></td>
+                <td class="device">{{ item.device }}</td>
+                <td class="brand">{{ item.brand }}</td>
+                <td class="size">{{ item.size }}</td>
+                <td class="price">{{ item.price }}</td>
+                <td class="usage">{{ item.usage }}</td>
+                <td class="remarks">{{ item.remarks }}</td>
+                <td><input type="number" class="form-control qty-input" min="0" value="0" style="width:100px;"></td>
+                <td class="subtotal">0</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
 
-        <!-- Total Amount -->
-        <div class="mb-3">
-          <label class="form-label fw-bold">Total Amount:</label>
-          <input type="hidden" name="total_amount" id="totalAmountInput">
-          <p id="totalAmount" class="fs-5 text-success">₹0</p>
+        <div class="text-end fw-bold mt-2">
+          <span>Total Amount: ₹<span id="grandTotal">0</span></span>
         </div>
 
-        <!-- Submit -->
-        <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary px-4">Submit Request</button>
+        <!-- Hidden fields -->
+        <input type="hidden" name="selected_items" id="selectedItems">
+        <input type="hidden" name="total_amount" id="totalAmount">
+
+        <div class="mt-3 text-end">
+          <button class="btn btn-primary" type="submit">Submit Request</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+
+<!-- Define empty existingItems for new page -->
+<script>
+  const existingItems = [];
+</script>
+
+<!-- Load JS at the end -->
 <script src="{% static 'js/script.js' %}"></script>
+
 {% endblock %}

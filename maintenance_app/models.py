@@ -18,5 +18,9 @@ class MaintenanceRequest(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     admin_remark = models.TextField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
+    selected_items = models.TextField(blank=True, null=True)  
+    total_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    
+    
     def __str__(self):
         return f"{self.title} ({self.branch}) - {self.status}"

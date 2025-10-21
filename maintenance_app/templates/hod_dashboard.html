@@ -14,7 +14,7 @@
     <thead>
       <tr>
         <th>Title</th>
-        <th>Lab</th>
+        <th>Branch</th>
         <th>Status</th>
         <th>Date</th>
         <th>Action</th>
@@ -24,7 +24,7 @@
       {% for r in requests %}
       <tr>
         <td class="fw-semibold">{{ r.title }}</td>
-        <td>{{ r.lab_name }}</td>
+        <td>{{ r.branch }}</td>
         <td>
           {% if r.status == 'Pending' %}
             <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Pending</span>
