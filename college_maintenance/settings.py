@@ -23,6 +23,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'college_maintenance.middleware.no_cache_middleware.NoCacheMiddleware',
+
 ]
 ROOT_URLCONF = 'college_maintenance.urls'
 TEMPLATES = [

@@ -1,71 +1,93 @@
-
-
-
-#navbar-brand {
-  font-weight: 600;
-  justify-content: center;
+/* ==========================
+   NAVBAR STYLING
+========================== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #003366;
+  padding: 15px 30px;
+  color: white;
+  position: relative;
+  z-index: 1000;
 }
 
-.card { 
-  border-radius: 8px;
+.logo {
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.table-primary {
-  background: #e9f2ff;
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
 }
 
-.badge {
-  font-size: 0.9rem;
+.nav-links li {
+  display: flex;
+  align-items: center;
 }
- body {
-    background: linear-gradient(to right, #eef2f3, #8e9eab);
+
+.navbar-text {
+  color: white;
+  font-weight: 500;
+}
+
+.logout-btn {
+  background: #ffcc00;
+  color: #003366;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.logout-btn:hover {
+  background: #ffd633;
+}
+
+/* Hamburger Menu (hidden on desktop) */
+.menu-toggle {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* ==========================
+   RESPONSIVE BEHAVIOR
+========================== */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
   }
 
-  .dashboard-header {
-    background: white;
-    border-radius: 10px;
-    padding: 20px 30px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  }
-
-  .table-container {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    padding: 20px;
-    margin-top: 20px;
-  }
-
-  .table thead th {
-    background: #003366 !important;
-    color: white !important;
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background: #003366;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
     text-align: center;
-    vertical-align: middle;
+    padding: 15px 0;
+    border-top: 2px solid #ffcc00;
   }
 
-  .table tbody tr:hover {
-    background-color: #f1f5ff;
-    transition: 0.3s;
+  .nav-links.show {
+    display: flex;
   }
 
-  .badge {
-    font-size: 0.85rem;
-    padding: 6px 12px;
-    border-radius: 20px;
+  .nav-links li {
+    margin: 10px 0;
   }
 
-  .btn-outline-primary {
-    border-radius: 20px;
+  .logout-btn {
+    width: 120px;
+    margin: 0 auto;
   }
-
-  .btn-primary {
-    background: linear-gradient(to right, #004e92, #000428);
-    border: none;
-    border-radius: 25px;
-    padding: 8px 18px;
-    font-weight: 500;
-  }
-
-  .btn-primary:hover {
-    background: linear-gradient(to right, #0066cc, #004080);
-  }
+}

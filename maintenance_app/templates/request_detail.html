@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
+{%load static%}
 {% block title %}Request Detail{% endblock %}
+  <link rel="icon" href="{% static "images/logo4.jpg" %}">
+
 {% block content %}
 
+<link rel="stylesheet" href="{%static "css/admin.css" %}">
 <div class="card">
   <div class="card-header">
     {% if user.is_superuser or user.username == 'principal'%}
@@ -15,14 +19,13 @@
     <p><strong>Branch:</strong> {{ req.branch }}</p>
     <p><strong>Description:</strong><br>{{ req.description }}</p>
     <p><strong>Status:</strong> {{ req.status }}</p>
-    <p><strong>Admin Remark:</strong> {{ req.admin_remark|default:"None" }}</p>
     <p><small>Submitted: {{ req.date_submitted|date:'d M Y h:i A' }}</small></p>
     <hr>
 
     {% if items %}
       <h5>Selected Equipment</h5>
       <table class="table table-bordered">
-        <thead>
+        <thead class="bg-primary">
           <tr>
             <th>Device</th>
             <th>Brand/Model</th>
@@ -41,7 +44,6 @@
             <td>{{ item.brand }}</td>
             <td>{{ item.size }}</td>
             <td>{{ item.usage }}</td>
-            <td>{{ item.remarks }}</td>
             <td>{{ item.quantity }}</td>
             <td>{{ item.price }}</td>
             <td>{{ item.subtotal }}</td>

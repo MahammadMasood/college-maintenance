@@ -17,42 +17,90 @@ import os
 from weasyprint import HTML
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+from django.urls import reverse
+from django.views.decorators.cache import never_cache
+
 
 
 class CustomLoginView(LoginView):
+    template_name = 'registration/login.html'  # Path confirmed
+
+    def form_valid(self, form):
+        """Called when valid form data has been POSTed."""
+        # Log the user in
+        response = super().form_valid(form)
+
+        # Role-based redirect
+        user = self.request.user
+        if user.is_superuser or (hasattr(user, 'profile') and user.profile.role == 'PRINCIPAL'):
+            return redirect('admin_dashboard')
+        return redirect('hod_dashboard')
+
     def get(self, request, *args, **kwargs):
+        """Redirect authenticated users away from the login page."""
         if request.user.is_authenticated:
-            if request.user.is_superuser or hasattr(request.user, 'profile') and request.user.profile.role == 'PRINCIPAL':
-                return redirect('admin_dashboard')
-            return redirect('hod_dashboard')
+            return redirect(self.get_success_url())
         return super().get(request, *args, **kwargs)
 
-def is_admin(user):
+    def get_success_url(self):
+        """Default success URL after login."""
+        user = self.request.user
+        if user.is_superuser or (hasattr(user, 'profile') and user.profile.role == 'PRINCIPAL'):
+            return reverse('admin_dashboard')
+        return reverse('hod_dashboard')
+ 
+def is_admin(user): 
     try:
         # Allow both ADMIN and PRINCIPAL roles
         return user.profile.role in ['ADMIN', 'PRINCIPAL']
     except Exception:
         # Fallback for users without profile (like superuser)
         return user.is_superuser
+
+
 def home_redirect(request):
     if request.user.is_authenticated:
         try:
-           if User.is_superuser:
-             return redirect('admin_dashboard')
-           elif hasattr(request.user, 'profile') and request.user.profile.role == 'PRINCIPAL':
-               return redirect('admin_dashboard')
-           else:
-              return redirect('hod_dashboard')   
+            if request.user.is_superuser:
+                return redirect('admin_dashboard')
+            elif hasattr(request.user, 'username') and request.user.username == 'prinipal':
+                return redirect('admin_dashboard')
+            else:
+                return redirect('hod_dashboard')
         except Exception:
             return redirect('hod_dashboard')
-    return redirect('login')
+
+    return render(request, 'homepage.html')
 
 
+@never_cache
 @login_required
 def hod_dashboard(request):
+    # Base queryset (only this HOD’s requests)
     requests = MaintenanceRequest.objects.filter(hod=request.user).order_by('-date_submitted')
-    return render(request, 'hod_dashboard.html', {'requests': requests})
 
+    # Capture optional ?status= parameter
+    status_filter = request.GET.get("status")
+
+    if status_filter:
+        requests = requests.filter(status=status_filter)
+
+    # Summary counts for cards
+    total = requests.count() if not status_filter else MaintenanceRequest.objects.filter(hod=request.user).count()
+    pending = MaintenanceRequest.objects.filter(hod=request.user, status="Pending").count()
+    approved = MaintenanceRequest.objects.filter(hod=request.user, status="Approved").count()
+    rejected = MaintenanceRequest.objects.filter(hod=request.user, status="Rejected").count()
+
+    context = {
+        "requests": requests,
+        "total": total,
+        "pending": pending,
+        "approved": approved,
+        "rejected": rejected,
+        "status_filter": status_filter,
+    }
+
+    return render(request, "hod_dashboard.html", context)
 
 @login_required
 def new_request(request):
@@ -151,12 +199,45 @@ def request_detail(request, pk):
         'items': items,  # ✅ matches your template variable
     })
 
+@never_cache
 @login_required
 @user_passes_test(is_admin)
 def admin_dashboard(request):
-    all_requests = MaintenanceRequest.objects.order_by('-date_submitted')
-    pending = all_requests.filter(status='Pending')
-    return render(request, 'admin_dashboard.html', {'requests': all_requests, 'pending': pending})
+    status_filter = request.GET.get('status')
+    department_filter = request.GET.get('department')
+
+    requests_qs = MaintenanceRequest.objects.order_by('-date_submitted')
+
+    # Apply filters
+    if status_filter:
+        requests_qs = requests_qs.filter(status=status_filter)
+
+    if department_filter:
+        requests_qs = requests_qs.filter(branch=department_filter)
+
+    # Counts for cards
+    total = MaintenanceRequest.objects.count()
+    pending = MaintenanceRequest.objects.filter(status='Pending').count()
+    approved = MaintenanceRequest.objects.filter(status='Approved').count()
+    rejected = MaintenanceRequest.objects.filter(status='Rejected').count()
+
+    # Distinct departments for dropdown
+    departments = MaintenanceRequest.objects.values_list('branch', flat=True).distinct()
+
+    context = {
+        'requests': requests_qs,
+        'total': total,
+        'pending': pending,
+        'approved': approved,
+        'rejected': rejected,
+        'departments': departments,
+        'status_filter': status_filter,
+        'department_filter': department_filter,
+    }
+    return render(request, 'admin_dashboard.html', context)
+
+
+
 
 @login_required
 @user_passes_test(is_admin)
@@ -191,7 +272,6 @@ def approve_request(request, pk):
             f"Dear {req.hod.first_name or req.hod.username},\n\n"
             f"Your maintenance request titled '{req.title}' for branch {req.branch} "
             f"has been approved.\n\n"
-            f"Admin Remark: {req.admin_remark}\n\n"
             f"Total Amount: ₹{req.total_amount}\n\n"
             f"The detailed request letter (with equipment list) is attached as a PDF.\n\n"
             f"Thank you,\nAdmin Team"
@@ -319,4 +399,4 @@ def edit_request(request, pk):
 
 def user_logout(request):
     logout(request)
-    return redirect('login') 
+    return redirect('home_redirect') 

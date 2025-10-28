@@ -1,52 +1,113 @@
-{% extends 'base.html' %}
-{% block title %}Admin Dashboard{% endblock %}
-{% block content %}
-<div class="container mt-4">
-  <h3 class="text-primary mb-4 fw-bold">Admin Dashboard</h3>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | College Maintenance Portal</title>
+  <link rel="icon" href="{% static "images/logo4.jpg" %}">
+  <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+</head>
+<body>
+<header>
+  <nav class="navbar">
+    <div class="logo">College Maintenance Portal</div>
+    <ul class="nav-links">
+      <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+<li class="dropdown-container">
+  <a id="deptLink">Departments ▾</a>
+  <div class="dropdown" id="deptDropdown">
+    <a href="?department=CSE">CSE</a>
+    <a href="?department=EEE">EEE</a>
+    <a href="?department=ME">ME</a>
+    <a href="?department=CE">CE</a>
+    <a href="?department=ECE">ECE</a>
+    <a href="?department=ATE">ATE</a>
+    <a href="?department=GENERAL">GENERAL</a>
+  </div>
+</li>
 
-  {% if requests %}
-  <div class="table-responsive shadow-sm rounded">
-    <table class="table table-bordered table-hover align-middle">
-      <thead class="table-dark text-center">
+
+
+      <li><a href="#table">Reports</a></li>
+      <li>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button class="logout-btn">Logout</button>
+        </form>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<section class="dashboard">
+  <h1>Principal’s Dashboard</h1>
+  <p>Welcome back! Here’s an overview of all maintenance activities across departments.</p>
+
+  <!-- Summary Cards -->
+  <div class="cards">
+    <a href="{% url 'admin_dashboard' %}" class="card {% if not status_filter %}active{% endif %}">
+      <h3>Total Requests</h3><p>{{ total }}</p>
+    </a>
+    <a href="?status=Pending" class="card {% if status_filter == 'Pending' %}active{% endif %}">
+      <h3>Pending Requests</h3><p>{{ pending }}</p>
+    </a>
+    <a href="?status=Approved" class="card {% if status_filter == 'Approved' %}active{% endif %}">
+      <h3>Approved</h3><p>{{ approved }}</p>
+    </a>
+    <a href="?status=Rejected" class="card {% if status_filter == 'Rejected' %}active{% endif %}">
+      <h3>Rejected</h3><p>{{ rejected }}</p>
+    </a>
+  </div>
+
+  <!-- Requests Table -->
+  <div class="table-section" id="table">
+    <h2>Maintenance Requests</h2>
+    {% if requests %}
+    <table>
+      <thead>
         <tr>
-          <th>Branch</th>
-          <th>HOD</th>
-          <th>Title</th>
+          <th>Department</th>
+          <th>Issue</th>
           <th>Status</th>
           <th>Action</th>
+          <th>View</th>
         </tr>
       </thead>
-      <tbody class="text-center">
+      <tbody>
         {% for r in requests %}
-        <tr class="{% if r.status == 'Approved' %}table-success{% elif r.status == 'Rejected' %}table-danger{% else %}table-light{% endif %}">
+        <tr>
           <td>{{ r.branch }}</td>
-          <td>{{ r.hod.username }}</td>
           <td>{{ r.title }}</td>
-          <td><span class="badge {% if r.status == 'Pending' %}bg-warning text-dark{% elif r.status == 'Approved' %}bg-success{% else %}bg-danger{% endif %}">
-              {{ r.status }}
-          </span></td>
+          <td><span class="status {{ r.status }}">{{ r.status }}</span></td>
           <td>
-            <a href="{% url 'request_detail' r.pk %}" class="btn btn-sm btn-info me-2">View</a>
-
             <form method="post" action="{% url 'approve_request' r.pk %}" class="d-inline">
               {% csrf_token %}
-              <input type="text" name="admin_remark" placeholder="Remark" class="form-control form-control-sm d-inline-block w-auto mb-1">
-              <button class="btn btn-success btn-sm">Approve</button>
+              <button class="btn-action" style="background:#28a745;">Approve</button>
             </form>
-
             <form method="post" action="{% url 'reject_request' r.pk %}" class="d-inline">
               {% csrf_token %}
-              <input type="text" name="admin_remark" placeholder="Remark" class="form-control form-control-sm d-inline-block w-auto mb-1">
-              <button class="btn btn-danger btn-sm">Reject</button>
+              <button class="btn-action" style="background:#dc3545;">Reject</button>
             </form>
           </td>
+          <td><a href="{% url 'request_detail' r.pk %}" class="btn-action">View</a></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+    {% else %}
+    <p class="text-muted text-center">No maintenance requests available.</p>
+    {% endif %}
   </div>
-  {% else %}
-  <p class="text-muted text-center">No maintenance requests available.</p>
-  {% endif %}
-</div>
-{% endblock %}
+</section>
+
+<footer>
+  <p>© TECH MAVERICKS | All Rights Reserved</p>
+</footer>
+<script id="departments-data" type="application/json">
+  {{ departments|safe|json_script:"departments-data" }}
+</script>
+<script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>

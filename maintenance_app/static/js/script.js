@@ -1,43 +1,4 @@
 
-
-function openLogin() {
-  document.getElementById("loginModal").style.display = "flex";
-}
-
-function closeLogin() {
-  document.getElementById("loginModal").style.display = "none";
-}
-
-function login() {
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const msg = document.getElementById("loginMsg");
-
-  // Hardcoded login credentials
-  const users = [
-    { username: "admin", password: "12345" },
-    { username: "student", password: "abcde" }
-  ];
-
-  const user = users.find(
-    (u) => u.username === username && u.password === password
-  );
-
-  if (user) {
-    msg.textContent = "✅ Login Successful! Redirecting...";
-    msg.style.color = "green";
-    setTimeout(() => {
-      alert("Welcome " + username + "!");
-      closeLogin();
-    }, 1000);
-  } else {
-    msg.textContent = "❌ Invalid Username or Password";
-    msg.style.color = "red";
-  }
-}
-
-
-
 //script for new request page  
 document.addEventListener('DOMContentLoaded', function () {
   const selectedItemsInput = document.getElementById('selectedItems');
@@ -116,3 +77,61 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initial calculation
   calculateTotals();
 });
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* ===============================
+     1️⃣ STATUS CARD FILTER HANDLING
+     =============================== */
+  const statusCards = document.querySelectorAll(".card");
+
+  statusCards.forEach((card) => {
+    card.addEventListener("click", () => {
+      const title = card.querySelector("h3").textContent.trim();
+
+      let status = "";
+      if (title.includes("Pending")) status = "Pending";
+      else if (title.includes("Approved")) status = "Approved";
+      else if (title.includes("Rejected")) status = "Rejected";
+
+      if (status) {
+        // Redirect with status query
+        window.location.href = `?status=${status}`;
+      } else {
+        // Reset filter
+        window.location.href = window.location.pathname;
+      }
+    });
+  });
+
+  /* ===============================
+     2️⃣ DEPARTMENT DROPDOWN HANDLING
+     =============================== */
+  const deptLink = document.getElementById("deptLink");
+
+  if (deptLink) {
+    const deptDropdown = document.getElementById("deptDropdown");
+
+    if (deptDropdown) {
+      // Toggle dropdown visibility
+      deptLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isVisible = deptDropdown.style.display === "flex";
+        deptDropdown.style.display = isVisible ? "none" : "flex";
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!deptLink.contains(e.target) && !deptDropdown.contains(e.target)) {
+          deptDropdown.style.display = "none";
+        }
+      });
+    }
+  }
+
+});
+
+

@@ -15,3 +15,4 @@ urlpatterns = [
     path('request/<int:pk>/reject/', views.reject_request, name='reject_request'),
     path('request/<int:pk>/edit/',views.edit_request, name='edit_request'),
 ]
+ 
